@@ -16,6 +16,15 @@ namespace Data.Entities
         public string Description { get; private set; }
         public string Brand { get; private set; }
         private Subdepartment Subdepartment { get; set; }
+        //public override string ToString()
+        //{
+        //    var report = new StringBuilder();
+
+        //    report.AppendLine($"ID\tName\tStock\tPrice\tSKU\tDescription\tBrand\tSubdepartment\tSubdepartment");
+        //    report.AppendLine($"{Id}\t{Name}\t{Stock}\t{Price}\t{Sku}\t{Description}\t{Brand}\t{Subdepartment?.Name}\n{Subdepartment?.Department?.Name}");
+        //    return report.ToString();
+        //}
+        public override string ToString() => $"{Id}\t{Name}\t{Stock}\t{Price}\t{Sku}\t{Description}\t{Brand}\t{Subdepartment?.Name}\n{Subdepartment?.Department?.Name}";
 
         public Product(int id, string name, decimal price, string description, string brand, string sku, int stock = 1)
         {
@@ -51,6 +60,14 @@ namespace Data.Entities
             Name = name;
             Price = price;
             Description = description;
+        }
+
+        public void AddSubdepartment(Subdepartment subdepartment)
+        {
+            if (subdepartment == null)
+                throw new ArgumentNullException("Se requiere un subdepartamento");
+
+            Subdepartment = subdepartment;
         }
     }
 }
