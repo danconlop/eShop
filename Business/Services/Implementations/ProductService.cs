@@ -70,6 +70,9 @@ namespace Business.Services.Implementations
                 throw new ApplicationException("El producto no fue encontrado");
         }
 
-        
+        public void UpdateStock(Product product, int stock)
+        {
+            product.UpdateStock(stock);
+        }
     }
 }

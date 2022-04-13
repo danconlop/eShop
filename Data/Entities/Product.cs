@@ -77,5 +77,10 @@ namespace Data.Entities
 
             Stock = stock;
         }
+
+        public void UpdateStock(int stock)
+        {
+            Stock = Stock + stock;
+        }
     }
 }

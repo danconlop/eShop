@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using Data.Entities;
 using Business.Services.Implementations;
 using Business;
+using Data.Enums;
+using System.Globalization;
 
 namespace eShop
 {
     public partial class eShopConsole
     {
+        
         private List<Product> ProductList = TestData.ProductList;
         
         private bool MenuDeOrdenesDeCompra()
@@ -18,7 +21,8 @@ namespace eShop
             Console.WriteLine("Elije una opcion:");
             Console.WriteLine("1. Agregar orden de compra");
             Console.WriteLine("2. Mostrar ordenes de compra");
-            Console.WriteLine("3. Regresar");
+            Console.WriteLine("3. Cambiar estatus");
+            Console.WriteLine("4. Regresar");
 
             switch (Console.ReadLine())
             {
@@ -29,7 +33,9 @@ namespace eShop
                     MostrarOrdenDeCompra();
                     break;
                 case "3":
+                    CambiarEstatusOrdenCompra();
                     break;
+                case "4":
                 default:
                     return false;
             }
@@ -37,6 +43,41 @@ namespace eShop
             return true;
         }
 
+        private void CambiarEstatusOrdenCompra()
+        {
+            Console.WriteLine("A que orden quieres cambiarle el estatus?");
+            var InpoId = Console.ReadLine();
+            Int32.TryParse(InpoId, out int poId);
+
+            Console.WriteLine("A que estatus quieres cambiarlo?");
+            foreach(var status in Enum.GetNames<PurchaseOrderStatus>())
+            {
+                Console.WriteLine(status);
+            }
+            //var statusAux = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(Console.ReadLine().ToLower());
+            var statusAux = Console.ReadLine();
+
+            PurchaseOrderStatus newStatus;
+            var didParse = Enum.TryParse(statusAux, out newStatus);
+
+            if (didParse)
+            {
+                var po = _purchaseOrderService.ChangeStatus(poId, newStatus);
+                // Actualizar el Stock de los productos originales que fueron comprados por la orden de compra que haya sido pagada
+                if (po.Status == PurchaseOrderStatus.Paid)
+                {
+                    ActualizarStockDeProducto(po.PurchasedProducts);
+                }
+                Console.WriteLine("Orden de compra actualziada correctamente");
+            } else
+            {
+                Console.WriteLine("El estatus solicitado no existe");
+            }
+            Console.ReadLine();
+
+        }
+
+        // TODO: Unificar ObtenerProveedor y ObtenerListaDeProductos dentro de AgregarOrdenDeCompra
         private void AgregarOrdenDeCompra()
         {
             PurchaseOrder purchaseOrder;
@@ -87,7 +128,7 @@ namespace eShop
                 productSelected.AddStock(productQuantityAux);
                 // Se agrega el producto a la lista
                 PurchaseOrderProducts.Add(productSelected);
-                Console.WriteLine("Desea continuar agregando productos? (Y/N)");
+                Console.WriteLine("Desea continuar agregando productos? (S/N)");
                 continuar = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(continuar))
@@ -115,6 +156,14 @@ namespace eShop
             }
             Console.WriteLine("Presione cualquier tecla para continuar...");
             Console.ReadKey();
+        }
+
+        private void ActualizarStockDeProducto(List<Product> purchaseOrder)
+        {
+            foreach(var product in purchaseOrder)
+            {
+                _productService.UpdateStock(product, product.Stock);
+            }
         }
     }
 }
