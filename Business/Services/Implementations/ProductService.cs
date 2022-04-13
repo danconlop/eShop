@@ -11,31 +11,7 @@ namespace Business.Services.Implementations
 {
     public class ProductService : IProductService
     {
-        public static List<Product> ProductList = new List<Product>
-        {
-            new Product(1, "Silla", 150, "Silla ergonomica", "Costco", "SDD123",4),
-            new Product(2, "Mesa", 200, "Mesa de comedor madera", "Costco", "MS66623",5),
-            new Product(3, "Estufa", 3500, "Estufa empotrable", "Mabe", "ES9685",12)
-        };
-
-        public List<Department> DepartmentList = new List<Department>
-        {
-            new Department(1,"Electronicos", new List<Subdepartment>{ 
-                new Subdepartment(1,"TVs"),
-                new Subdepartment(2,"Celulares"),
-                new Subdepartment(3,"Audio")
-            }),
-            new Department(2,"Muebles", new List<Subdepartment>{
-                new Subdepartment(1,"Cocina"),
-                new Subdepartment(2,"Comedor"),
-                new Subdepartment(3,"Sala")
-            }),
-            new Department(3,"Alimentos", new List<Subdepartment>{
-                new Subdepartment(1,"Lacteos"),
-                new Subdepartment(2,"Carnes frias"),
-                new Subdepartment(3,"Pastas")
-            })
-        };
+        private List<Product> ProductList = TestData.ProductList;
 
         public void AddProduct(Product product)
         {
@@ -94,19 +70,6 @@ namespace Business.Services.Implementations
                 throw new ApplicationException("El producto no fue encontrado");
         }
 
-        public List<Department> GetDepartments()
-        {
-            return DepartmentList;
-        }
-
-        public List<Subdepartment> GetSubdepartments(int departmentID)
-        {
-            var result = DepartmentList.FirstOrDefault(department => department.Id.Equals(departmentID));
-
-            if (result != null)
-                return result.Subdepartments;
-
-            return new List<Subdepartment>();
-        }
+        
     }
 }

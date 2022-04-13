@@ -69,5 +69,13 @@ namespace Data.Entities
 
             Subdepartment = subdepartment;
         }
+
+        public void AddStock(int stock)
+        {
+            if (stock <= 0)
+                throw new ArgumentOutOfRangeException("La cantidad debe ser mayor a cero");
+
+            Stock = stock;
+        }
     }
 }
