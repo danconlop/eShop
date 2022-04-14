@@ -136,9 +136,10 @@ namespace eShop
                     break;
                 case "2": // Editar carrito
                     CartShowDetail();
+                    Console.ReadKey();
                     break;
                 case "3": // Cancelar compra
-                    
+                    CartEdit();
                     break;
                 case "4": // Realizar pedido
 
