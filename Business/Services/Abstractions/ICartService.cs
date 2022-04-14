@@ -7,13 +7,12 @@ using Data.Entities;
 
 namespace Business.Services.Abstractions
 {
-    public interface IProductService
+    public interface ICartService
     {
-        public List<Product> GetProducts();
-        public Product GetProduct(int id);
         public void AddProduct(Product product);
-        public void UpdateProduct(Product product);
+        public void UpdateProductQuantity(Product product, int newQuantity);
         public void DeleteProduct(Product product);
-        public void UpdateStock(Product product, int stock);
+        public List<Product> GetProductList();
+
     }
 }

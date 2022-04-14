@@ -15,6 +15,7 @@ namespace eShop
         private readonly IDepartmentService _departmentService;
         private readonly IReportService _reportService;
         private readonly IPurchaseOrderService _purchaseOrderService;
+        private readonly ICartService _cartService;
 
         public eShopConsole()
         {
@@ -22,9 +23,45 @@ namespace eShop
             _departmentService = new DepartmentService();
             _reportService = new ReportService();
             _purchaseOrderService = new PurchaseOrderService();
+            _cartService = new CartService();
         }
 
+
+        // Menú PRINCIPAL
         public bool MainMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("Elije una opcion:");
+            Console.WriteLine("1. CLIENTE");
+            Console.WriteLine("2. ADMINISTRADOR");
+            Console.WriteLine("3. Salir del sistema");
+
+            switch (Console.ReadLine())
+            {
+                case "1": // Cliente
+                    bool showClientMenu = true;
+                    while (showClientMenu)
+                    {
+                        showClientMenu = MenuCliente();
+                    }
+                    break;
+                case "2": // Administrador
+                    bool showAdminMenu = true;
+                    while (showAdminMenu)
+                    {
+                        showAdminMenu = MenuAdmin();
+                    }
+                    break;
+                case "3":
+                default:
+                    return false;
+            }
+
+            return true;
+        }
+
+        // Menú ADMINISTRADOR
+        public bool MenuAdmin()
         {
             Console.Clear();
             Console.WriteLine("Elije una opcion:");
@@ -35,7 +72,7 @@ namespace eShop
             Console.WriteLine("5. Eliminar producto");
             Console.WriteLine("6. Reportes");
             Console.WriteLine("7. Ordenes de compra");
-            Console.WriteLine("8. Salir del sistema");
+            Console.WriteLine("8. Regresar");
 
             switch (Console.ReadLine())
             {
@@ -63,7 +100,11 @@ namespace eShop
                     }
                     break;
                 case "7":
-                    MenuDeOrdenesDeCompra();
+                    bool showPOMenu = true;
+                    while (showPOMenu)
+                    {
+                        showPOMenu = MenuDeOrdenesDeCompra();
+                    }
                     break;
                 case "8":
                 default:
@@ -73,7 +114,44 @@ namespace eShop
             return true;
         }
 
-        
+        // Menú CLIENTE
+        public bool MenuCliente()
+        {
+            Console.Clear();
+            Console.WriteLine("Elije una opcion:");
+            Console.WriteLine("----------- CARRITO -----------");
+            Console.WriteLine("1. Agregar productos al carrito");
+            Console.WriteLine("2. Mostrar productos en el carrito");
+            Console.WriteLine("3. Editar carrito");
+            Console.WriteLine("----------- PEDIDOS -----------");
+            Console.WriteLine("4. Realizar pedido");
+            Console.WriteLine("5. Consultar pedidos");
+            Console.WriteLine("6. Regresar");
+
+            switch (Console.ReadLine())
+            {
+                case "1": // Agregar productos al carrito
+                    CartAddProducts();
+                    break;
+                case "2": // Editar carrito
+                    CartShowDetail();
+                    break;
+                case "3": // Realizar pedido
+                    
+                    break;
+                case "4": // Consultar pedidos realizados (total gastado por el cliente)
+                    
+                    break;
+                case "5":
+
+                    break;
+                case "6":
+                default:
+                    return false;
+            }
+
+            return true;
+        }
         private void AgregarProducto()
         {
             Console.WriteLine("Agrega los valores necesarios para registrar un producto");
