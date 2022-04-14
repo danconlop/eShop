@@ -26,10 +26,5 @@ namespace Business.Services.Implementations
 
             return new List<Subdepartment>();
         }
-
-        public List<Subdepartment> GetSubdepartments()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

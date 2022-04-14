@@ -34,6 +34,7 @@ namespace Business.Models
         public string Subdepartment { get; set; }
     }
 
+    /* PURCHASE ORDER DTO */
     public class POEstatusPagadoUltimos7DiasDto
     {
         public int Id { get; set; }
@@ -52,14 +53,6 @@ namespace Business.Models
         public int Id { get; set; }
         public Provider Provider { get; set; }
         public PurchaseOrderStatus Status { get; set; }
-    }
-
-    public class ProductoMasUnidadesCompradasDto
-    {
-        public int OrderId { get; set; }
-        public DateTime OrderDate { get; set; }
-        public string ProductName { get; set; }
-        public int Quantity { get; set; }
     }
 
 }

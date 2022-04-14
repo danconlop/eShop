@@ -15,6 +15,7 @@ namespace Business.Services.Implementations
         private List<Product> ProductList = TestData.ProductList;
         private List<Department> DepartmentList = TestData.DepartmentList;
         private DepartmentService _departmentService = new DepartmentService();
+        private PurchaseOrderService _purchaseOrderService = new PurchaseOrderService();
 
         public List<ProductReportDto> GetTop5PRoductosMasCaros()
         {
@@ -50,9 +51,12 @@ namespace Business.Services.Implementations
                 .ToList();
         }
 
-        public List<POEstatusPagadoUltimos7DiasDto> GetPOEstatusPagadoUltimos7Dias(List<PurchaseOrder> purchaseOrders)
+
+        /* PURCHASE ORDER REPORTS */
+
+        public List<POEstatusPagadoUltimos7DiasDto> GetPOEstatusPagadoUltimos7Dias()
         {
-            return purchaseOrders
+            return _purchaseOrderService.GetPurchaseOrders()
                 .Where(po => po.PurchaseDate.Subtract(DateTime.Now).Days <= 7 && po.Status == PurchaseOrderStatus.Paid)
                 .Select(po => new POEstatusPagadoUltimos7DiasDto
                 {
@@ -61,22 +65,21 @@ namespace Business.Services.Implementations
                     Status = po.Status
                 }).ToList();
         }
-
-        public List<POSillaDto> GetPOSillas(List<PurchaseOrder> purchaseOrders)
+        
+        public List<POSillaDto> GetPOSillas()
         {
-            //throw new NotImplementedException();
-            var r = purchaseOrders
-                .GroupBy(po => po.PurchasedProducts.FindAll(product => product.Name.Equals("Silla")))
-                .Select(group => new POSillaDto
+            return _purchaseOrderService.GetPurchaseOrders()
+                .Where(po => po.PurchasedProducts.Any(product => product.Name.Equals("Silla")))
+                .Select(po => new POSillaDto
                 {
-                    //Id = group.Key,
-
+                    Id = po.Id,
+                    products = po.PurchasedProducts.Where(product => product.Name.Equals("Silla")).ToList()
                 }).ToList();
         }
-
-        public List<POEstatusPendienteDto> GetPOEstatusPendientes(List<PurchaseOrder> purchaseOrders)
+        
+        public List<POEstatusPendienteDto> GetPOEstatusPendientes()
         {
-            return purchaseOrders
+            return _purchaseOrderService.GetPurchaseOrders()
                 .Where(po => po.Status == PurchaseOrderStatus.Pending && po.Provider.Name.Equals("Levis"))
                 .Select(po => new POEstatusPendienteDto
                 {
@@ -86,8 +89,9 @@ namespace Business.Services.Implementations
                 }).ToList();
         }
 
-        public List<ProductoMasUnidadesCompradasDto> GetProductoMasUnidadesCompradas(List<PurchaseOrder> purchaseOrders)
+        public Product GetProductoMasUnidadesCompradas()
         {
+            /*
             return purchaseOrders
                 .GroupBy(po => po.PurchasedProducts.Sum(product => product.Stock))
                 .Select(group => group.Max())
@@ -97,45 +101,18 @@ namespace Business.Services.Implementations
                     OrderDate = group.PurchaseDate,
                     //ProductName = group.PurchasedProducts
                     //Quantity = group
-                }).ToList();
+                }).ToList(); */
+            return _purchaseOrderService.GetPurchaseOrders()
+                .Where(po => po.Status == PurchaseOrderStatus.Paid)
+                .SelectMany(po => po.PurchasedProducts) // SelectMany unifica todas las listas en una
+                .GroupBy(product => product.Id)
+                .Select(group => new
+                {
+                    Product = group.First(),
+                    Sum = group.Sum(product => product.Stock)
+                })
+                .OrderByDescending(result => result.Sum)
+                .FirstOrDefault()?.Product;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        public List<ProductReportGroupedByDepartment> GetProductsGroupedByDepartment()
-        {
-            //var departments = _departmentService.GetDepartments();
-
-            //new ProductReportGroupedByDepartment
-            //{
-            //    foreach (var department in departments)
-            //    {
-            //        var subdepartments = _departmentService.GetSubdepartments(department.Id);
-            //        foreach (var subdepartment in subdepartments)
-            //        {
-            //            foreach (var product in subdepartment.Products)
-            //            {
-            //                    Name = product.Name,
-            //            }
-            //        }
-            //    }
-            //}
-        }
-        */
-
     }
 }

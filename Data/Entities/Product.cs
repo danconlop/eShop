@@ -15,7 +15,7 @@ namespace Data.Entities
         public string Sku { get; private set; }
         public string Description { get; private set; }
         public string Brand { get; private set; }
-        private Subdepartment Subdepartment { get; set; }
+        public Subdepartment Subdepartment { get; set; }
         //public override string ToString()
         //{
         //    var report = new StringBuilder();

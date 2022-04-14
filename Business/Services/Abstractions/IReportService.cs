@@ -15,10 +15,10 @@ namespace Business.Services.Abstractions
         public List<ProductReportByBrandOrderedByName> GetProductsOrderedByName();
         //public List<ProductReportGroupedByDepartment> GetProductsGroupedByDepartment();
 
-        public List<POEstatusPagadoUltimos7DiasDto> GetPOEstatusPagadoUltimos7Dias(List<PurchaseOrder> purchaseOrders);
+        public List<POEstatusPagadoUltimos7DiasDto> GetPOEstatusPagadoUltimos7Dias();
 
-        public List<POSillaDto> GetPOSillas(List<PurchaseOrder> purchaseOrders);
-        public List<POEstatusPendienteDto> GetPOEstatusPendientes(List<PurchaseOrder> purchaseOrders);
-        public List<ProductoMasUnidadesCompradasDto> GetProductoMasUnidadesCompradas(List<PurchaseOrder> purchaseOrders); 
+        public List<POSillaDto> GetPOSillas();
+        public List<POEstatusPendienteDto> GetPOEstatusPendientes();
+        public Product GetProductoMasUnidadesCompradas(); 
     }
 }

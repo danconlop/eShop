@@ -10,6 +10,6 @@ namespace Business.Services.Abstractions
     public interface IDepartmentService
     {
         public List<Department> GetDepartments();
-        public List<Subdepartment> GetSubdepartments();
+        public List<Subdepartment> GetSubdepartments(int departmentID);
     }
 }
