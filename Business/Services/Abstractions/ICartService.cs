@@ -13,6 +13,7 @@ namespace Business.Services.Abstractions
         public void UpdateProductQuantity(Product product, int newQuantity);
         public void DeleteProduct(Product product);
         public List<Product> GetProductList();
+        public void EmptyCart();
 
     }
 }

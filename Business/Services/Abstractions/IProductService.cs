@@ -15,5 +15,6 @@ namespace Business.Services.Abstractions
         public void UpdateProduct(Product product);
         public void DeleteProduct(Product product);
         public void UpdateStock(Product product, int stock);
+        public void SubstrackStock(Product product, int quantity);
     }
 }

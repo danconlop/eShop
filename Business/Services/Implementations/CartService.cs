@@ -27,6 +27,8 @@ namespace Business.Services.Implementations
             _cartProducts.Remove(productAux);
         }
 
+        public void EmptyCart() => _cartProducts.Clear();
+
         public List<Product> GetProductList()
         {
             return _cartProducts;

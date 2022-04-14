@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Entities
 {
@@ -11,7 +9,6 @@ namespace Data.Entities
         public decimal Total { get; private set; }
         public DateTime PurchaseDate { get; private set; } = DateTime.Now;
         public List<Product> PurchasedProducts { get; private set; }
-        public bool Status { get; set; }
 
         public Cart(List<Product> purchasedProducts, DateTime? purchaseDate = null)
         {

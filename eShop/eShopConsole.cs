@@ -16,6 +16,7 @@ namespace eShop
         private readonly IReportService _reportService;
         private readonly IPurchaseOrderService _purchaseOrderService;
         private readonly ICartService _cartService;
+        private readonly IOrderService _orderService;
 
         public eShopConsole()
         {
@@ -24,6 +25,7 @@ namespace eShop
             _reportService = new ReportService();
             _purchaseOrderService = new PurchaseOrderService();
             _cartService = new CartService();
+            _orderService = new OrderService();
         }
 
 
@@ -123,7 +125,7 @@ namespace eShop
             Console.WriteLine("1. Agregar productos al carrito");
             Console.WriteLine("2. Mostrar productos en el carrito");
             Console.WriteLine("3. Editar carrito");
-            Console.WriteLine("4. Cancelar compra");
+            Console.WriteLine("4. Vaciar el carrito");
             Console.WriteLine("----------- PEDIDOS -----------");
             Console.WriteLine("5. Realizar pedido");
             Console.WriteLine("6. Consultar pedidos");
@@ -141,14 +143,14 @@ namespace eShop
                 case "3": // Cancelar compra
                     CartEdit();
                     break;
-                case "4": // Realizar pedido
-
+                case "4": // Cancelar pedido
+                    EmptyCart();
                     break;
-                case "5":
-
+                case "5": // Realizar pedido
+                    AddOrder();
                     break;
                 case "6": // Consultar pedidos realizados (total gastado por el cliente)
-
+                    ShowOrders();
                     break;
                 case "7":
                 default:

@@ -51,6 +51,11 @@ namespace Business.Services.Implementations
             return ProductList;
         }
 
+        public void SubstrackStock(Product product, int quantity)
+        {
+            product.SubstractStock(quantity);
+        }
+
         public void UpdateProduct(Product product)
         {
             // Así lo tenía yo, pero de esta manera se actualiza todo el registro

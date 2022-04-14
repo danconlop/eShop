@@ -29,9 +29,14 @@ namespace eShop
                         var productAux = _cartService.GetProductList().FirstOrDefault(p => p.Id.Equals(prod.Id));
                         // Muestra solamente si hay stock mayor a cero
                         if (productAux == null)
+                        {
                             if (prod.Stock > 0) Console.WriteLine($"{prod.Id}. {prod.Name}");
+                        }
                         else
-                            if (prod.Stock > productAux.Stock) Console.WriteLine($"{prod.Id}. {prod.Name}");
+                        {
+                            if (productAux.Stock < prod.Stock) Console.WriteLine($"{prod.Id}. {prod.Name}");
+                        }
+                        
                     }
 
                     Console.WriteLine("Selecciona el producto a agregar");
@@ -113,60 +118,87 @@ namespace eShop
 
         private void CartEdit()
         {
-            // Mostrar contenido del carrito
-            if (CartShowDetail())
+            try
             {
-                // Mostrar opciones
-                Console.WriteLine("Indique la opción que desea realizar");
-                Console.WriteLine("1. Editar cantidad");
-                Console.WriteLine("2. Borrar producto");
-                var editOption = ValidateInt(Console.ReadLine());
-                // Solicitar el ID del producto
-                Console.WriteLine("Indique el número del producto");
-                var productIndex = ValidateInt(Console.ReadLine());
-
-                var cartProduct = _cartService.GetProductList().ElementAt(productIndex - 1);
-
-                switch (editOption)
+                // Mostrar contenido del carrito
+                if (CartShowDetail())
                 {
-                    case 1: // Editar cantidad
+                    Product cartProduct;
+                    // Mostrar opciones
+                    Console.WriteLine("Indique la opción que desea realizar");
+                    Console.WriteLine("1. Editar cantidad");
+                    Console.WriteLine("2. Borrar producto");
+                    Console.WriteLine("3. Regresar");
+                    var editOption = ValidateInt(Console.ReadLine());
 
-                        if (cartProduct != null)
-                        {
-                            var whProduct = _productService.GetProduct(cartProduct.Id);
-                            Console.WriteLine("Ingrese la cantidad");
-                            var newQuantity = ValidateInt(Console.ReadLine());
+                    // Solicitar el ID del producto
+                    Console.WriteLine("Indique el número del producto");
+                    var productIndex = ValidateInt(Console.ReadLine());
 
-                            if (newQuantity <= whProduct.Stock)
+                    cartProduct = _cartService.GetProductList().ElementAt(productIndex - 1);
+
+                    switch (editOption)
+                    {
+                        case 1: // Editar cantidad
+
+                            if (cartProduct != null)
                             {
-                                cartProduct.AddStock(newQuantity);
-                                Console.WriteLine("Cantidad actualizada exitosamente");
-                            } else
-                            {
-                                Console.WriteLine("No hay suficiente stock en almacén");
+                                var whProduct = _productService.GetProduct(cartProduct.Id);
+                                Console.WriteLine("Ingrese la cantidad");
+                                var newQuantity = ValidateInt(Console.ReadLine());
+
+                                if (newQuantity <= whProduct.Stock)
+                                {
+                                    cartProduct.AddStock(newQuantity);
+                                    Console.WriteLine("Cantidad actualizada exitosamente");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No hay suficiente stock en almacén");
+                                }
                             }
-                        }
-                        break;
-                    case 2: // Eliminar producto del carrito
-                        Console.WriteLine("Está seguro de eliminar el producto? (Y/N)");
-                        var inputEliminar = Console.ReadLine();
+                            break;
+                        case 2: // Eliminar producto del carrito
+                            Console.WriteLine("Está seguro de eliminar el producto? (Y/N)");
+                            var inputEliminar = Console.ReadLine();
 
-                        if (!string.IsNullOrEmpty(inputEliminar))
-                        {
-                            if (inputEliminar.ToUpper().Equals("Y"))
+                            if (!string.IsNullOrEmpty(inputEliminar))
                             {
-                                _cartService.GetProductList().Remove(cartProduct);
-                                Console.WriteLine("Producto removido del carrito");
+                                if (inputEliminar.ToUpper().Equals("Y"))
+                                {
+                                    _cartService.GetProductList().Remove(cartProduct);
+                                    Console.WriteLine("Producto removido del carrito");
+                                }
                             }
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        case 3:
+                        default:
+                            break;
+                    }
+
                 }
-
+                Console.WriteLine($"\nPresione cualquier tecla para continuar...");
+                Console.ReadKey();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
-            Console.WriteLine($"\nPresione cualquier tecla para continuar...");
-            Console.ReadKey();
+            
+        }
+
+        private void EmptyCart()
+        {
+            Console.WriteLine("Está seguro de vaciar el carrito? (Y/N)");
+            var inputVaciar = Console.ReadLine();
+
+            if (!string.IsNullOrEmpty(inputVaciar))
+            {
+                if (inputVaciar.ToUpper().Equals("Y"))
+                {
+                    _cartService.EmptyCart();
+                    Console.WriteLine("Se ha vaciado el carrito exitosamente");
+                }
+            }
         }
     }
 }
