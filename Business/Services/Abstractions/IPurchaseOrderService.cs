@@ -14,6 +14,8 @@ namespace Business.Services.Abstractions
         public List<PurchaseOrder> GetPurchaseOrders();
 
         public PurchaseOrder ChangeStatus(int purchaseOrderId, PurchaseOrderStatus status);
+
+        public PurchaseOrder GetPurchaseOrderById(int id);
     }
 
 

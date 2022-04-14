@@ -31,5 +31,10 @@ namespace Business.Services.Implementations
             throw new ApplicationException("No se encontró la orden solicitada");
 
         }
+
+        public PurchaseOrder GetPurchaseOrderById(int id)
+        {
+            return _purchaseOrders.FirstOrDefault(po => po.Id.Equals(id));
+        }
     }
 }

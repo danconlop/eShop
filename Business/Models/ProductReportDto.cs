@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Entities;
+using Data.Enums;
 
 namespace Business.Models
 {
@@ -32,6 +34,32 @@ namespace Business.Models
         public string Subdepartment { get; set; }
     }
 
+    public class POEstatusPagadoUltimos7DiasDto
+    {
+        public int Id { get; set; }
+        public DateTime PurchaseDate { get; set; }
+        public PurchaseOrderStatus Status { get; set; }
+    }
 
+    public class POSillaDto
+    {
+        public int Id { get; set; }
+        public List<Product> products = new List<Product>();
+    }
+
+    public class POEstatusPendienteDto
+    {
+        public int Id { get; set; }
+        public Provider Provider { get; set; }
+        public PurchaseOrderStatus Status { get; set; }
+    }
+
+    public class ProductoMasUnidadesCompradasDto
+    {
+        public int OrderId { get; set; }
+        public DateTime OrderDate { get; set; }
+        public string ProductName { get; set; }
+        public int Quantity { get; set; }
+    }
 
 }

@@ -15,6 +15,7 @@ namespace Data.Entities
         public Provider Provider { get; private set; }
         public List<Product> PurchasedProducts { get; private set; }
         public PurchaseOrderStatus Status { get; set; }
+        public bool Processed { get; set; }
 
         private static int consecutiveNumber = 1;
 
@@ -54,6 +55,9 @@ namespace Data.Entities
         public void ChangeStatus(PurchaseOrderStatus status)
         {
             Status = status;
+
+            if (Status == PurchaseOrderStatus.Paid)
+                Processed = true;
         }
     }
 }

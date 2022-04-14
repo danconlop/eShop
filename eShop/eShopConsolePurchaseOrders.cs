@@ -62,13 +62,19 @@ namespace eShop
 
             if (didParse)
             {
+
+                // Obtener estatus primero para validar que no tenga ya paid
+                var poPreviousData = _purchaseOrderService.GetPurchaseOrderById(poId);
                 var po = _purchaseOrderService.ChangeStatus(poId, newStatus);
-                // Actualizar el Stock de los productos originales que fueron comprados por la orden de compra que haya sido pagada
-                if (po.Status == PurchaseOrderStatus.Paid)
+                if (newStatus == PurchaseOrderStatus.Paid)
                 {
-                    ActualizarStockDeProducto(po.PurchasedProducts);
+                    // Actualizar el Stock de los productos originales que fueron comprados por la orden de compra que haya sido pagada
+                    if (poPreviousData.Status != PurchaseOrderStatus.Paid && po.Status == PurchaseOrderStatus.Paid)
+                    {
+                        ActualizarStockDeProducto(po.PurchasedProducts);
+                    }
                 }
-                Console.WriteLine("Orden de compra actualziada correctamente");
+                Console.WriteLine("Orden de compra actualizada correctamente");
             } else
             {
                 Console.WriteLine("El estatus solicitado no existe");
@@ -120,14 +126,15 @@ namespace eShop
                 Console.WriteLine("Selecciona el producto a agregar");
                 var productIndex = Console.ReadLine();
                 Int32.TryParse(productIndex, out int productIndexAux);
-                var productSelected = ProductList.ElementAt(productIndexAux - 1);
+                var productSelected = _productService.GetProduct(productIndexAux);
+                var productSelectedAux = new Product(productSelected.Id, productSelected.Name, productSelected.Price, productSelected.Description, productSelected.Brand, productSelected.Sku, productSelected.Stock);
                 Console.WriteLine("Ingrese la cantidad de producto");
                 var productQuantity = Console.ReadLine();
                 Int32.TryParse(productQuantity, out int productQuantityAux);
                 // Se agrega el stock
-                productSelected.AddStock(productQuantityAux);
+                productSelectedAux.AddStock(productQuantityAux);
                 // Se agrega el producto a la lista
-                PurchaseOrderProducts.Add(productSelected);
+                PurchaseOrderProducts.Add(productSelectedAux);
                 Console.WriteLine("Desea continuar agregando productos? (S/N)");
                 continuar = Console.ReadLine();
 
