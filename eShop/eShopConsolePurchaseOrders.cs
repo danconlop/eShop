@@ -64,12 +64,12 @@ namespace eShop
             {
 
                 // Obtener estatus primero para validar que no tenga ya paid
-                var poPreviousData = _purchaseOrderService.GetPurchaseOrderById(poId);
+                var poPreviousStatus = _purchaseOrderService.GetPurchaseOrderById(poId).Status;
                 var po = _purchaseOrderService.ChangeStatus(poId, newStatus);
                 if (newStatus == PurchaseOrderStatus.Paid)
                 {
                     // Actualizar el Stock de los productos originales que fueron comprados por la orden de compra que haya sido pagada
-                    if (poPreviousData.Status != PurchaseOrderStatus.Paid && po.Status == PurchaseOrderStatus.Paid)
+                    if(poPreviousStatus != PurchaseOrderStatus.Paid)
                     {
                         ActualizarStockDeProducto(po.PurchasedProducts);
                     }
@@ -83,58 +83,40 @@ namespace eShop
 
         }
 
-        // TODO: Unificar ObtenerProveedor y ObtenerListaDeProductos dentro de AgregarOrdenDeCompra
         private void AgregarOrdenDeCompra()
         {
             PurchaseOrder purchaseOrder;
-
-            Console.WriteLine("Elije un proveedor");
-            var provider = ObtenerProveedor();
-            Console.WriteLine("Lista de productos disponibles");
-            var purchaseOrderProducts = ObtenerListaDeProductos();
-            // Se agrega a la purchase order
-            purchaseOrder = new PurchaseOrder(provider, purchaseOrderProducts);
-            // Service para agregar la PO
-            _purchaseOrderService.AddPurchaseOrder(purchaseOrder);
-            Console.WriteLine("La orden de compra se agregó exitosamente");
-            Console.ReadKey();
-        }
-        private Provider ObtenerProveedor()
-        {
-            var ProvidersList = TestData.GetProviders();
-            foreach (var provider in ProvidersList)
-            {
-                Console.WriteLine($"{provider.Id}. {provider.Name}");
-            }
-            var providerIndex = Console.ReadLine();
-            Int32.TryParse(providerIndex, out int providerIndexAux);
-            return ProvidersList.ElementAt(providerIndexAux - 1);
-        }
-
-        private List<Product> ObtenerListaDeProductos()
-        {
-            List<Product> PurchaseOrderProducts = new List<Product>();
+            List<Product> purchaseOrderProducts = new();
             string continuar;
-
-            foreach (var product in ProductList)
-            {
-                Console.WriteLine($"{product.Id}. {product.Name}");
-            }
-
+            /*
+             * ELEGIR PROVEEDOR
+             */
+            var ProvidersList = TestData.GetProviders();
+            Console.WriteLine("Elije un proveedor");
+            ProvidersList.ForEach(provider => Console.WriteLine($"{provider.Id}. {provider.Name}"));
+            var providerIndex = ValidateInt(Console.ReadLine());
+            var provider = ProvidersList.ElementAt(providerIndex - 1);
+            /*
+             * ELEGIR PRODUCTOS
+             */
             do
             {
+                // Mostrar lista de productos disponibles
+                Console.WriteLine("Lista de productos disponibles");
+                var productList = _productService.GetProducts();
+                productList.ForEach(product => Console.WriteLine($"{product.Id}. {product.Name}"));
+
                 Console.WriteLine("Selecciona el producto a agregar");
-                var productIndex = Console.ReadLine();
-                Int32.TryParse(productIndex, out int productIndexAux);
-                var productSelected = _productService.GetProduct(productIndexAux);
-                var productSelectedAux = new Product(productSelected.Id, productSelected.Name, productSelected.Price, productSelected.Description, productSelected.Brand, productSelected.Sku, productSelected.Stock);
+                var productIndex = ValidateInt(Console.ReadLine());
+                var productData = productList.ElementAt(productIndex - 1);
+                var product = new Product(productData.Id, productData.Name, productData.Price, productData.Description, productData.Brand, productData.Sku);
                 Console.WriteLine("Ingrese la cantidad de producto");
-                var productQuantity = Console.ReadLine();
-                Int32.TryParse(productQuantity, out int productQuantityAux);
+                var productQuantity = ValidateInt(Console.ReadLine());
                 // Se agrega el stock
-                productSelectedAux.AddStock(productQuantityAux);
+                product.AddStock(productQuantity);
                 // Se agrega el producto a la lista
-                PurchaseOrderProducts.Add(productSelectedAux);
+                purchaseOrderProducts.Add(product);
+                // Preguntar si se desea continuar agregando productos
                 Console.WriteLine("Desea continuar agregando productos? (S/N)");
                 continuar = Console.ReadLine();
 
@@ -142,8 +124,14 @@ namespace eShop
                     continuar = "N";
 
             } while (continuar.ToUpper() != "N");
+            
 
-            return PurchaseOrderProducts;
+            // Se agrega a la purchase order
+            purchaseOrder = new PurchaseOrder(provider, purchaseOrderProducts);
+            // Service para agregar la PO
+            _purchaseOrderService.AddPurchaseOrder(purchaseOrder);
+            Console.WriteLine("La orden de compra se agregó exitosamente");
+            Console.ReadKey();
         }
 
         private void MostrarOrdenDeCompra()
@@ -169,7 +157,7 @@ namespace eShop
         {
             foreach(var product in purchaseOrder)
             {
-                _productService.UpdateStock(product, product.Stock);
+                _productService.UpdateStock(_productService.GetProduct(product.Id), product.Stock);
             }
         }
     }

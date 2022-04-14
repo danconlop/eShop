@@ -78,9 +78,9 @@ namespace Data.Entities
             Stock = stock;
         }
 
-        public void UpdateStock(int stock)
+        public void UpdateStock(int NewQuantity)
         {
-            Stock = Stock + stock;
+            Stock += NewQuantity;
         }
     }
 }

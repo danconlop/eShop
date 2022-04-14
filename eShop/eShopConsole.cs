@@ -258,10 +258,12 @@ namespace eShop
 
         public int ValidateInt(string input)
         {
-            if (Int32.TryParse(input, out int outputInt))
-                return outputInt;
-            else
+            if (!Int32.TryParse(input, out int outputInt))
+            {
                 throw new InvalidCastException("Debe ingresar un número");
+            }
+
+            return outputInt;
         }
     }
 }
