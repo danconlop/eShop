@@ -63,9 +63,10 @@ namespace eShop
             if (didParse)
             {
 
-                // Obtener estatus primero para validar que no tenga ya paid
+                // Obtener estatus primero para validar que no tenga status paid
                 var poPreviousStatus = _purchaseOrderService.GetPurchaseOrderById(poId).Status;
 
+                // Si ya está pagada, no se permiten cambios al status
                 if (poPreviousStatus != PurchaseOrderStatus.Paid)
                 {
                     var po = _purchaseOrderService.ChangeStatus(poId, newStatus);
