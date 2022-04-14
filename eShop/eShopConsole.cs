@@ -123,10 +123,11 @@ namespace eShop
             Console.WriteLine("1. Agregar productos al carrito");
             Console.WriteLine("2. Mostrar productos en el carrito");
             Console.WriteLine("3. Editar carrito");
+            Console.WriteLine("4. Cancelar compra");
             Console.WriteLine("----------- PEDIDOS -----------");
-            Console.WriteLine("4. Realizar pedido");
-            Console.WriteLine("5. Consultar pedidos");
-            Console.WriteLine("6. Regresar");
+            Console.WriteLine("5. Realizar pedido");
+            Console.WriteLine("6. Consultar pedidos");
+            Console.WriteLine("7. Regresar");
 
             switch (Console.ReadLine())
             {
@@ -136,16 +137,19 @@ namespace eShop
                 case "2": // Editar carrito
                     CartShowDetail();
                     break;
-                case "3": // Realizar pedido
+                case "3": // Cancelar compra
                     
                     break;
-                case "4": // Consultar pedidos realizados (total gastado por el cliente)
-                    
+                case "4": // Realizar pedido
+
                     break;
                 case "5":
 
                     break;
-                case "6":
+                case "6": // Consultar pedidos realizados (total gastado por el cliente)
+
+                    break;
+                case "7":
                 default:
                     return false;
             }

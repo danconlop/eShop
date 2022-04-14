@@ -19,7 +19,17 @@ namespace eShop
                 // Mostrar lista de productos disponibles
                 Console.WriteLine("Lista de productos disponibles");
                 var productList = _productService.GetProducts();
-                productList.ForEach(product => Console.WriteLine($"{product.Id}. {product.Name}"));
+                //productList.ForEach(product => Console.WriteLine($"{product.Id}. {product.Name}"));
+                foreach (var prod in productList)
+                {
+                    // Buscar si el producto ya existe en la lista
+                    var productAux = _cartService.GetProductList().FirstOrDefault(p => p.Id.Equals(prod.Id));
+                    // Muestra solamente si hay stock mayor a cero
+                    if (productAux == null)
+                        if (prod.Stock > 0) Console.WriteLine($"{prod.Id}. {prod.Name}");
+                    else
+                        if (prod.Stock > productAux.Stock) Console.WriteLine($"{prod.Id}. {prod.Name}");
+                }
 
                 Console.WriteLine("Selecciona el producto a agregar");
                 var productIndex = ValidateInt(Console.ReadLine());
@@ -28,22 +38,30 @@ namespace eShop
                 var product = new Product(productData.Id, productData.Name, productData.Price, productData.Description, productData.Brand, productData.Sku);
                 Console.WriteLine("Ingrese la cantidad de producto");
                 var productQuantity = ValidateInt(Console.ReadLine());
-                /*
-                 * BUSCAR SI EL PRODUCTO NO ESTA EN EL CARRITO
-                 * SI NO ESTA, ENTONCES SE AGREGA EL PRODUCTO
-                 */
 
-                if (!_cartService.GetProductList().Any(prod => prod.Id.Equals(productIndex)))
+                // No permite que se soliciten mas productos de los que hay en stock
+                if (productData.Stock >= productQuantity)
                 {
-                    // Se establece el stock
-                    product.AddStock(productQuantity);
-                    // Se agrega el producto
-                    _cartService.AddProduct(product);
-                }
-                else // SI EL PRODUCTO YA EXISTE, SOLAMENTE SE ACTUALIZA EL STOCK
+                    /*
+                     * BUSCAR SI EL PRODUCTO NO ESTA EN EL CARRITO
+                     * SI NO ESTA, ENTONCES SE AGREGA EL PRODUCTO
+                     */
+                    if (!_cartService.GetProductList().Any(prod => prod.Id.Equals(productIndex)))
+                    {
+                        // Se establece el stock
+                        product.AddStock(productQuantity);
+                        // Se agrega el producto
+                        _cartService.AddProduct(product);
+                    }
+                    else // SI EL PRODUCTO YA EXISTE, SOLAMENTE SE ACTUALIZA EL STOCK
+                    {
+                        // validar que el stock de almacen y de carrito no tengan ya el stock posible)
+                        var productAux = _cartService.GetProductList().FirstOrDefault(p => p.Id.Equals(product.Id));
+                        productAux.UpdateStock(productQuantity);
+                    }
+                } else
                 {
-                    var productAux = _cartService.GetProductList().FirstOrDefault(p => p.Id.Equals(product.Id));
-                    productAux.UpdateStock(productQuantity);
+                    Console.WriteLine($"No hay suficientes unidades en stock, hay {productData.Stock} del producto seleccionado");
                 }
 
                 // Preguntar si se desea continuar agregando productos
@@ -83,6 +101,14 @@ namespace eShop
                 Console.WriteLine("No hay productos en el carrito");
             }
             Console.ReadKey();
+        }
+
+        private void CartEdit()
+        {
+            // Mostrar contenido del carrito
+            CartShowDetail();
+            // Mostrar opciones
+
         }
     }
 }
