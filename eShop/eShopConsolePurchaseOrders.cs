@@ -65,16 +65,23 @@ namespace eShop
 
                 // Obtener estatus primero para validar que no tenga ya paid
                 var poPreviousStatus = _purchaseOrderService.GetPurchaseOrderById(poId).Status;
-                var po = _purchaseOrderService.ChangeStatus(poId, newStatus);
-                if (newStatus == PurchaseOrderStatus.Paid)
+
+                if (poPreviousStatus != PurchaseOrderStatus.Paid)
                 {
-                    // Actualizar el Stock de los productos originales que fueron comprados por la orden de compra que haya sido pagada
-                    if(poPreviousStatus != PurchaseOrderStatus.Paid)
+                    var po = _purchaseOrderService.ChangeStatus(poId, newStatus);
+
+                    if (newStatus == PurchaseOrderStatus.Paid)
                     {
+                        // Actualizar el Stock de los productos originales que fueron comprados por la orden de compra que haya sido pagada
                         ActualizarStockDeProducto(po.PurchasedProducts);
                     }
+
+                    Console.WriteLine("Orden de compra actualizada correctamente");
+
+                } else
+                {
+                    Console.WriteLine("La orden ya está pagada, no se puede actualizar el estatus.");
                 }
-                Console.WriteLine("Orden de compra actualizada correctamente");
             } else
             {
                 Console.WriteLine("El estatus solicitado no existe");
