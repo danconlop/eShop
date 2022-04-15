@@ -123,7 +123,6 @@ namespace eShop
                 // Mostrar contenido del carrito
                 if (CartShowDetail())
                 {
-                    Product cartProduct;
                     // Mostrar opciones
                     Console.WriteLine("Indique la opción que desea realizar");
                     Console.WriteLine("1. Editar cantidad");
@@ -131,54 +130,71 @@ namespace eShop
                     Console.WriteLine("3. Regresar");
                     var editOption = ValidateInt(Console.ReadLine());
 
-                    // Solicitar el ID del producto
-                    Console.WriteLine("Indique el número del producto");
-                    var productIndex = ValidateInt(Console.ReadLine());
-
-                    cartProduct = _cartService.GetProductList().ElementAt(productIndex - 1);
+                    
 
                     switch (editOption)
                     {
                         case 1: // Editar cantidad
+                            // Solicitar el ID del producto
+                            Console.WriteLine("Indique el número del producto");
+                            var editProductIndex = ValidateInt(Console.ReadLine());
+                            var cartProductEdit = _cartService.GetProductList().ElementAt(editProductIndex - 1);
 
-                            if (cartProduct != null)
+                            if (cartProductEdit != null)
                             {
-                                var whProduct = _productService.GetProduct(cartProduct.Id);
+                                var whProduct = _productService.GetProduct(cartProductEdit.Id);
                                 Console.WriteLine("Ingrese la cantidad");
                                 var newQuantity = ValidateInt(Console.ReadLine());
 
                                 if (newQuantity <= whProduct.Stock)
                                 {
-                                    cartProduct.AddStock(newQuantity);
+                                    cartProductEdit.AddStock(newQuantity);
                                     Console.WriteLine("Cantidad actualizada exitosamente");
                                 }
                                 else
                                 {
                                     Console.WriteLine("No hay suficiente stock en almacén");
                                 }
+                                
                             }
+                            else
+                            {
+                                Console.WriteLine("El producto no existe en el carrito");
+                            }
+                            Console.ReadKey();
+
                             break;
                         case 2: // Eliminar producto del carrito
-                            Console.WriteLine("Está seguro de eliminar el producto? (Y/N)");
-                            var inputEliminar = Console.ReadLine();
+                            // Solicitar el ID del producto
+                            Console.WriteLine("Indique el número del producto");
+                            var deleteProductIndex = ValidateInt(Console.ReadLine());
+                            var cartProductDelete = _cartService.GetProductList().ElementAt(deleteProductIndex - 1);
 
-                            if (!string.IsNullOrEmpty(inputEliminar))
+                            if (cartProductDelete != null)
                             {
-                                if (inputEliminar.ToUpper().Equals("Y"))
+                                Console.WriteLine("Está seguro de eliminar el producto? (Y/N)");
+                                var inputEliminar = Console.ReadLine();
+
+                                if (!string.IsNullOrEmpty(inputEliminar))
                                 {
-                                    _cartService.GetProductList().Remove(cartProduct);
-                                    Console.WriteLine("Producto removido del carrito");
+                                    if (inputEliminar.ToUpper().Equals("Y"))
+                                    {
+                                        _cartService.GetProductList().Remove(cartProductDelete);
+                                        Console.WriteLine("Producto removido del carrito");
+                                    }
                                 }
+                            } else
+                            {
+                                Console.WriteLine("El producto no existe en el carrito");
                             }
+                            Console.ReadKey();
+
                             break;
-                        case 3:
                         default:
                             break;
                     }
-
                 }
-                Console.WriteLine($"\nPresione cualquier tecla para continuar...");
-                Console.ReadKey();
+                
             } catch (Exception e)
             {
                 Console.WriteLine(e.Message);
