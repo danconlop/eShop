@@ -70,8 +70,8 @@ namespace eShop
                 foreach(var order in listOrders)
                 {
                     grandTotal += order.Total;
-                    Console.WriteLine($"Order # {order.Id}");
-                    Console.WriteLine($"Date {order.OrderDate.ToShortDateString()}");
+                    Console.WriteLine($"Pedido # {order.Id}");
+                    Console.WriteLine($"Fecha {order.OrderDate.ToShortDateString()}");
                     Console.WriteLine($"Total {order.Total}");
                     Console.WriteLine("------------------- PRODUCTS -----------------------");
                     Console.WriteLine($"#\t\tNombre\t\tCantidad\t\tPrecio unitario\t\tTotal");
@@ -82,7 +82,7 @@ namespace eShop
                     }
                     Console.WriteLine("----------------------------------------------------");
                 }
-                Console.WriteLine($"\n Total spent: {grandTotal}");
+                Console.WriteLine($"\nTotal gastado: {grandTotal}");
 
             } else
             {
