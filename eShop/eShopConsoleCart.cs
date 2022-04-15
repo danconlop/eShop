@@ -80,23 +80,26 @@ namespace eShop
                                         Console.WriteLine("Producto agotado");
                                 }
                             }
-
-                            Console.WriteLine("Desea continuar agregando productos? (S/N)");
-                            continuar = Console.ReadLine();
-
-                            if (string.IsNullOrEmpty(continuar))
-                                continuar = "N";
                         }
                         else
                         {
-                            Console.WriteLine($"No hay suficientes unidades en stock, hay {productData.Stock} unidades del producto seleccionado");
+                            if (productData.Stock > 0)
+                                Console.WriteLine($"No hay suficientes unidades en stock, hay {productData.Stock} unidades del producto seleccionado");
+                            else
+                                Console.WriteLine("Producto agotado");
                         }
                     } else
                     {
                         Console.WriteLine("No existe el producto indicado");
                     }
 
-                }catch(Exception e)
+                    Console.WriteLine("Desea continuar agregando productos? (S/N)");
+                    continuar = Console.ReadLine();
+
+                    if (string.IsNullOrEmpty(continuar))
+                        continuar = "N";
+                }
+                catch(Exception e)
                 {
                     Console.WriteLine(e.Message);
                 }
