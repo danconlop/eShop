@@ -41,43 +41,61 @@ namespace eShop
 
                     Console.WriteLine("Selecciona el producto a agregar");
                     var productIndex = ValidateInt(Console.ReadLine());
-
+                    
                     var productData = productList.ElementAt(productIndex - 1);
-                    var product = new Product(productData.Id, productData.Name, productData.Price, productData.Description, productData.Brand, productData.Sku);
-                    Console.WriteLine("Ingrese la cantidad de producto");
-                    var productQuantity = ValidateInt(Console.ReadLine());
 
-                    // No permite que se soliciten mas productos de los que hay en stock
-                    if (productData.Stock >= productQuantity)
+                    if (productData != null)
                     {
-                        /*
-                         * BUSCAR SI EL PRODUCTO NO ESTA EN EL CARRITO
-                         * SI NO ESTA, ENTONCES SE AGREGA EL PRODUCTO
-                         */
-                        if (!_cartService.GetProductList().Any(prod => prod.Id.Equals(productIndex)))
+                        var product = new Product(productData.Id, productData.Name, productData.Price, productData.Description, productData.Brand, productData.Sku);
+                        Console.WriteLine("Ingrese la cantidad de producto");
+                        var productQuantity = ValidateInt(Console.ReadLine());
+
+                        // No permite que se soliciten mas productos de los que hay en stock
+                        if (productData.Stock >= productQuantity)
                         {
-                            // Se establece el stock
-                            product.AddStock(productQuantity);
-                            // Se agrega el producto
-                            _cartService.AddProduct(product);
+                            /*
+                                * BUSCAR SI EL PRODUCTO NO ESTA EN EL CARRITO
+                                * SI NO ESTA, ENTONCES SE AGREGA EL PRODUCTO
+                                */
+                            if (!_cartService.GetProductList().Any(prod => prod.Id.Equals(productIndex)))
+                            {
+                                // Se establece el stock
+                                product.AddStock(productQuantity);
+                                // Se agrega el producto
+                                _cartService.AddProduct(product);
+                            }
+                            else // SI EL PRODUCTO YA EXISTE, SOLAMENTE SE ACTUALIZA EL STOCK
+                            {
+                                var productCart = _cartService.GetProductList().FirstOrDefault(p => p.Id.Equals(product.Id));
+                                var stockLeft = productData.Stock - productCart.Stock;
+
+                                if (stockLeft >= productQuantity)
+                                {
+                                    productCart.UpdateStock(productQuantity);
+                                } else
+                                {
+                                    if (stockLeft > 0)
+                                        Console.WriteLine($"No hay suficientes unidades en stock, hay {stockLeft} unidades del producto seleccionad");
+                                    else
+                                        Console.WriteLine("Producto agotado");
+                                }
+                            }
+
+                            Console.WriteLine("Desea continuar agregando productos? (S/N)");
+                            continuar = Console.ReadLine();
+
+                            if (string.IsNullOrEmpty(continuar))
+                                continuar = "N";
                         }
-                        else // SI EL PRODUCTO YA EXISTE, SOLAMENTE SE ACTUALIZA EL STOCK
+                        else
                         {
-                            // validar que el stock de almacen y de carrito no tengan ya el stock posible)
-                            var productAux = _cartService.GetProductList().FirstOrDefault(p => p.Id.Equals(product.Id));
-                            productAux.UpdateStock(productQuantity);
+                            Console.WriteLine($"No hay suficientes unidades en stock, hay {productData.Stock} unidades del producto seleccionado");
                         }
                     } else
                     {
-                        Console.WriteLine($"No hay suficientes unidades en stock, hay {productData.Stock} del producto seleccionado");
+                        Console.WriteLine("No existe el producto indicado");
                     }
 
-                    // Preguntar si se desea continuar agregando productos
-                    Console.WriteLine("Desea continuar agregando productos? (S/N)");
-                    continuar = Console.ReadLine();
-
-                    if (string.IsNullOrEmpty(continuar))
-                        continuar = "N";
                 }catch(Exception e)
                 {
                     Console.WriteLine(e.Message);
