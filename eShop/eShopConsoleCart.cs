@@ -13,7 +13,7 @@ namespace eShop
     {
         private void CartAddProducts()
         {
-            string continuar = "Y";
+            string continuar = "S";
 
             do
             {
@@ -172,12 +172,12 @@ namespace eShop
 
                             if (cartProductDelete != null)
                             {
-                                Console.WriteLine("Está seguro de eliminar el producto? (Y/N)");
+                                Console.WriteLine("Está seguro de eliminar el producto? (S/N)");
                                 var inputEliminar = Console.ReadLine();
 
                                 if (!string.IsNullOrEmpty(inputEliminar))
                                 {
-                                    if (inputEliminar.ToUpper().Equals("Y"))
+                                    if (inputEliminar.ToUpper().Equals("S"))
                                     {
                                         _cartService.GetProductList().Remove(cartProductDelete);
                                         Console.WriteLine("Producto removido del carrito");
@@ -204,12 +204,12 @@ namespace eShop
 
         private void EmptyCart()
         {
-            Console.WriteLine("Está seguro de vaciar el carrito? (Y/N)");
+            Console.WriteLine("Está seguro de vaciar el carrito? (S/N)");
             var inputVaciar = Console.ReadLine();
 
             if (!string.IsNullOrEmpty(inputVaciar))
             {
-                if (inputVaciar.ToUpper().Equals("Y"))
+                if (inputVaciar.ToUpper().Equals("S"))
                 {
                     _cartService.EmptyCart();
                     Console.WriteLine("Se ha vaciado el carrito exitosamente");

@@ -12,12 +12,12 @@ namespace eShop
             // Validar que el carrito tenga productos
             if (_cartService.GetProductList().Any())
             {
-                Console.WriteLine("Se generará su pedido, está seguro de finalizar su compra (Y/N)");
+                Console.WriteLine("Se generará su pedido, está seguro de finalizar su compra (S/N)");
                 var inputRealizarPedido = Console.ReadLine();
 
                 if (!string.IsNullOrEmpty(inputRealizarPedido))
                 {
-                    if (inputRealizarPedido.ToUpper().Equals("Y"))
+                    if (inputRealizarPedido.ToUpper().Equals("S"))
                     {
 
                         // Crear nuevo pedido

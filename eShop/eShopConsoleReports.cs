@@ -12,12 +12,12 @@ namespace eShop
     {
         private bool MenuDeReportes()
         {
-            Console.WriteLine("Elije una opcion:");
+            Console.WriteLine("Elije una opción:");
             Console.WriteLine("1. Top 5 de productos más caros ordenados por precio más alto");
             Console.WriteLine("2. Productos con 5 unidades o menos ordenados por unidades");
             Console.WriteLine("3. Nombre de productos por marcas ordenados por nombre");
             Console.WriteLine("4. Agrupación de departamentos con subdepartamentos y productos");
-            Console.WriteLine("------------ PURCHASE ORDER REPORTS --------------------------");
+            Console.WriteLine("------------ REPORTES DE ORDENES DE COMPRA --------------------------");
             Console.WriteLine("5. Estatus PAGADO en los últimos 7 días");
             Console.WriteLine("6. PO que incluyan silla entre sus productos");
             Console.WriteLine("7. Estatus PENDIENTE proveedor LEVIS");
@@ -85,11 +85,11 @@ namespace eShop
 
             foreach (var department in departments)
             {
-                Console.WriteLine($"Department {department.Name} >");
+                Console.WriteLine($"Departamento {department.Name} >");
                 var subdepartments = _departmentService.GetSubdepartments(department.Id);
                 foreach (var subdepartment in subdepartments)
                 {
-                    Console.WriteLine($"Subdepartment [{subdepartment.Name}] >>");
+                    Console.WriteLine($"Subdepartmento [{subdepartment.Name}] >>");
                     foreach (var product in subdepartment.Products)
                     {
                         Console.WriteLine(product.ToString());
@@ -108,10 +108,10 @@ namespace eShop
 
             foreach (var department in result)
             {
-                Console.WriteLine($"- Department: {department.Key}");
+                Console.WriteLine($"- Departmento: {department.Key}");
                 foreach (var subdepartment in department)
                 {
-                    Console.WriteLine($"\t- Subdepartment: {subdepartment.Key.Subdepartment}");
+                    Console.WriteLine($"\t- Subdepartmento: {subdepartment.Key.Subdepartment}");
                     foreach (var product in subdepartment)
                     {
                         Console.WriteLine($"\t\t- {product.Name}");
@@ -119,7 +119,7 @@ namespace eShop
                 }
             }
 
-            Console.WriteLine("Press any key to continue...");
+            Console.WriteLine("Presione cualquier tecla para continuar...");
             Console.ReadLine();
         }
 
@@ -129,7 +129,7 @@ namespace eShop
 
             foreach (var dto in data)
             {
-                Console.WriteLine($"ID {dto.Id} \nPurchase date {dto.PurchaseDate}\nStatus {dto.Status}");
+                Console.WriteLine($"ID {dto.Id} \nFecha de compra {dto.PurchaseDate}\nEstatus {dto.Status}");
             }
         }
 
@@ -142,7 +142,7 @@ namespace eShop
                 Console.WriteLine($"ID {dto.Id}");
                 foreach(var prod in dto.products)
                 {
-                    Console.WriteLine($"Product name {prod.Name}\nDescription {prod.Description}");
+                    Console.WriteLine($"Nombre de producto {prod.Name}\nDescripción {prod.Description}");
                 }
             }
         }
@@ -153,7 +153,7 @@ namespace eShop
 
             foreach(var dto in data)
             {
-                Console.WriteLine($"ID {dto.Id}\tProvider {dto.Provider}\tStatus {dto.Status}");
+                Console.WriteLine($"ID {dto.Id}\tProveedor {dto.Provider}\tEstatus {dto.Status}");
             }
         }
 
@@ -224,11 +224,11 @@ namespace eShop
 
             foreach (var department in departments)
             {
-                Console.WriteLine($"Department {department.Name} >");
+                Console.WriteLine($"Departmento {department.Name} >");
                 var subdepartments = _departmentService.GetSubdepartments(department.Id);
                 foreach (var subdepartment in subdepartments)
                 {
-                    Console.WriteLine($"Subdepartment [{subdepartment.Name}] >>");
+                    Console.WriteLine($"Subdepartmento [{subdepartment.Name}] >>");
                     foreach (var product in subdepartment.Products)
                     {
                         Console.WriteLine(product.ToString());
